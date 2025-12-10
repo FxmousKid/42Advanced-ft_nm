@@ -1,8 +1,25 @@
+# dev env
+**compile_commands.json
+**.cache/
+**.vscode/
+**.idea/
+**.vgcore*
+**.clangd
+modeling/
+*.drawio
+.editorconfig
+
+# build
+vgcore*
+ft_nm
+
+#------------- template .gitignore file C projects. -------------
+
 # Prerequisites
-*.d
+***.d
 
 # Object files
-*.o
+***.o
 *.ko
 *.obj
 *.elf
@@ -30,7 +47,7 @@
 
 # Executables
 *.exe
-*.out
+***.out
 *.app
 *.i*86
 *.x86_64
@@ -50,6 +67,3 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
-
-# debug information files
-*.dwo
