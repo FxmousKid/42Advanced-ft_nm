@@ -5,8 +5,12 @@ SRC_DIR 	= $(ROOT)/src/
 BUILD_DIR 	= $(ROOT)/build/
 INC_DIR 	= $(ROOT)/include/
 LIBFT_DIR 	= $(ROOT)/libft/
+TEST_DIR	= $(ROOT)/test/
 
 LOGFILE		:= nm.log
+
+TESTFILE	:= $(TEST_DIR)test.c
+TESTNAME	:= $(TEST_DIR)test_elf
 
 # .c files for source code
 SRC_FILES_NAMES = main.c
@@ -52,7 +56,7 @@ $(BUILD_DIR)%.o : $(SRC_DIR)%.c
 # This is to add the .d files as dependencies for linking
 -include $(DEP_FILES)
 
-re : fclean all
+re : fclean all 
 
 $(NAME) : $(OBJ_FILES)
 	@$(ECHO) "$(BROWN)[BLD] Building libft static library...$(NC)"
@@ -66,6 +70,13 @@ $(NAME) : $(OBJ_FILES)
 
 all : $(NAME) 
 
+test :
+	@$(ECHO) "$(BROWN)[BLD] Building test binary...$(NC)"
+	@$(ECHO) "$(BLUE)[CMP] Compiling \b$(subst $(ROOT)/, ,$(TESTFILE))...$(NC)"
+	@$(CC) -g3 -O0 $(TESTFILE) -o $(TESTNAME)
+	@$(ECHO) "$(GREEN)[BLD] successfully built test binary...$(NC)"
+
+
 clean : 
 	@$(ECHO) "$(BROWN)[CLN] Cleaning object and dependency files...$(NC)"
 	@$(RM) $(DEP_FILES) $(OBJ_FILES)
@@ -78,4 +89,4 @@ fclean :
 	@$(ECHO) # for newline
 
 .DEFAULT_GOAL := all
-.PHONY : all clean fclean re
+.PHONY : all clean fclean re test

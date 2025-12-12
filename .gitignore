@@ -10,6 +10,7 @@ modeling/
 .editorconfig
 
 # build
+test/test_elf
 vgcore*
 ft_nm
 
