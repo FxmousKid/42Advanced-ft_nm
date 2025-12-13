@@ -43,11 +43,26 @@ static void	parse_options(struct s_data *ctx, int argc, char *argv[])
 	}
 }
 
+static bool	parse_arguments(struct s_data *ctx, char *argv[])
+{
+	ctx->target_files = argv;
+	while (*argv) {
+		if (strlen(*argv) > PATH_MAX) {
+			ERR_MSG("file name [%s] is too long", *argv)
+			return false;
+
+		}
+		argv++;
+	}
+	return true;
+}
+
 bool	parse_cli(struct s_data *ctx, int *argc, char *argv[])
 {
 	parse_options(ctx, *argc, argv);
 	*argc -= optind;
 	argv += optind;	
-
+	if (!parse_arguments(ctx, argv))
+		return false;
 	return true;
 }

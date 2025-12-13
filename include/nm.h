@@ -1,18 +1,17 @@
 #ifndef NM_H
 # define NM_H
 
-#include <stdio.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <string.h>
-#include <stdbool.h>
-#include <getopt.h>
+# include <stdio.h> // IWYU pragma: keep
+# include <fcntl.h>
+# include <stdlib.h> // IWYU pragma: keep
+# include <unistd.h>
+# include <errno.h> // IWYU pragma: keep
+# include <string.h> // IWYU pragma: keep
+# include <stdbool.h>
+# include <getopt.h>
 
-#ifdef LIBFT_H
-# define LIBFT_H "\0"
-#endif
+# include "libft.h" // IWYU pragma: keep
+
 
 # define STRINGIFY(x) #x
 # define TOSTRING(x) STRINGIFY(x)
@@ -22,6 +21,8 @@
 
 
 struct s_data {
+	char	**target_files;
+	char	target_file[PATH_MAX + 1];
 	bool	exit_code;
 };
 
@@ -33,5 +34,8 @@ void		print_help(void);
 
 // Parsing
 bool		parse_cli(struct s_data *ctx, int *argc, char *argv[]);
+
+// ft_nm
+bool	ft_nm(struct s_data *ctx);
 
 #endif
