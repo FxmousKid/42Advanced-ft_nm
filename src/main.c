@@ -4,12 +4,10 @@
 int	main(int argc, char *argv[])
 {
 	struct s_data	ctx = {0};
-	char		*target;
 
 	parse_cli(&ctx, &argc, argv);
 	while (*ctx.target_files) {
-		target = ctx.target_file;
-		ft_strlcpy(target, *ctx.target_files, sizeof(target));
+		ft_strlcpy(ctx.target_file, *ctx.target_files, sizeof(ctx.target_file));
 		if (!ft_nm(&ctx))
 			return (EXIT_FAILURE);
 		ctx.target_files++;
