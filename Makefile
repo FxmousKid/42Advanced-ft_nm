@@ -7,7 +7,7 @@ INC_DIR 	= $(ROOT)/include/
 LIBFT_DIR 	= $(ROOT)/libft/
 TEST_DIR	= $(ROOT)/test/
 
-LOGFILE		:= nm.log
+LOGFILE		:= $(ROOT)/nm.log
 
 TESTFILE	:= $(TEST_DIR)test.c
 TESTNAME	:= $(TEST_DIR)test_elf
@@ -15,11 +15,12 @@ TESTNAME	:= $(TEST_DIR)test_elf
 # .c files for source code
 SRC_FILES_NAMES = main.c
 
-SRC_FILES_NAMES += nm.c
-
 SRC_FILES_NAMES += parser/parse_cli.c
+SRC_FILES_NAMES += parser/parse_elf.c
+SRC_FILES_NAMES += parser/parse_elf_symbols.c
 
 SRC_FILES_NAMES += utils/utils.c
+SRC_FILES_NAMES += utils/map_utils.c
 
 # Full path to .c files
 SRC_FILES = $(addprefix $(SRC_DIR), $(SRC_FILES_NAMES))
@@ -35,7 +36,7 @@ DEP_FILES := $(OBJ_FILES:.o=.d)
 NAME 	:= ft_nm
 CC 	:= cc
 IFLAGS	:= -I $(INC_DIR) -I $(LIBFT_DIR)/includes/
-CFLAGS 	:= -gdwarf-4 -Wall -Wextra -Werror $(IFLAGS) -MMD -MP -DLOGFILE_NAME=\"$(LOGFILE)\"
+CFLAGS 	:= -gdwarf-4 -Wall -Wextra -Werror $(IFLAGS) -MMD -MP -DLOGFILE_PATH=\"$(LOGFILE)\"
 LFLAGS 	:= libft/libft.a 
 MKDIR 	:= mkdir -p
 RM_RF 	:= rm -rf

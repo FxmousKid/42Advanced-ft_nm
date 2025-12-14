@@ -1,4 +1,4 @@
-#include "nm.h"
+#include "ft_nm.h"
 
 void	print_help(void)
 {
@@ -10,14 +10,13 @@ int	get_logfd(void)
 {
 	static int fd = 0;
 
-	// if (fd == 0)
-	// 	fd = open(LOGFILE_PATH, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (fd == 0)
+		fd = open(LOGFILE_PATH, O_RDWR | O_CREAT | O_TRUNC, 0644);
 
-	// if (fd < 0) {
-	// 	printf("Could not create logfile\n");
-	// 	exit(2);
-	// }
-	return STDERR_FILENO;
+	if (fd < 0) {
+		printf("Could not create logfile\n");
+		exit(2);
+	}
 
 	return fd;
 }
@@ -32,7 +31,7 @@ int	get_logfd(void)
  */
 void	_write_perr(const char *location)
 {
-	dprintf(get_logfd(), "ft_nm: %s [%s]\n", strerror(errno), location);
+	dprintf(get_logfd(), " %s [%s]\n", strerror(errno), location);
 }
 
 /**
@@ -45,5 +44,5 @@ void	_write_perr(const char *location)
  */
 void	_write_err(const char *location)
 {
-	dprintf(get_logfd(), "ft_nm: [%s]\n", location);
+	dprintf(get_logfd(), " [%s]\n", location);
 }

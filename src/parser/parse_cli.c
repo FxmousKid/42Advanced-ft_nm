@@ -1,4 +1,4 @@
-#include "nm.h"
+#include "ft_nm.h"
 
 static bool	opts_handle(struct s_data *ctx, int opt, char *argv[])
 {
@@ -12,7 +12,7 @@ static bool	opts_handle(struct s_data *ctx, int opt, char *argv[])
 
 	// Unknown opts
 	case '?':
-		ERR_MSG("Unkown option '%s'", argv[optind]);
+		LOG_MSG("Unkown option '%s'", argv[optind]);
 		fprintf(stderr, "Check usage with -h, --help\n");
 		ctx->exit_code = false;
 		return false;
@@ -48,7 +48,7 @@ static bool	parse_arguments(struct s_data *ctx, char *argv[])
 	ctx->target_files = argv;
 	while (*argv) {
 		if (strlen(*argv) > PATH_MAX) {
-			ERR_MSG("file name [%s] is too long", *argv)
+			LOG_MSG("file name [%s] is too long", *argv)
 			return false;
 
 		}

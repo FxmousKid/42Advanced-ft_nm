@@ -13,6 +13,7 @@ modeling/
 test/test_elf
 vgcore*
 ft_nm
+nm.log
 
 #------------- template .gitignore file C projects. -------------
 

@@ -9,7 +9,6 @@ recreating a simplified cersion of the nm UNIX util
 [Symbols in binaries](https://can-ozkan.medium.com/exploring-the-nm-tool-understanding-symbols-in-binaries-1ae03193212a)
 [Disecting ELF files](https://0x434b.dev/dissecting-and-exploiting-elf-files/)
 
-
 ### Tools
 
 - `otool` - display specified parts of object files or libraries
