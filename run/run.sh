@@ -14,17 +14,19 @@ command="make test"
 # Show help
 show_help() {
 	cat << EOF
-Usage: ./$0 [options]
+Usage: $0 [options]
 
 Options:
-  -h        show usage
-  -k        Kill the $CONTAINER_NAME container
-  -b        Rebuilds the Docker images (forces update) and runs 
-            the code (! building is Needed on 1st run)
-  -B        Same as -b, but exits after rebuilding
+  -h        	show usage
+  -k        	Kill the $CONTAINER_NAME container
+  -b        	Rebuilds the Docker images (forces update) and runs 
+            	the code (! building is Needed on 1st run)
+  -B        	Same as -b, but exits after rebuilding
+  -r <command>  Run a specific command in the container (default: 'make test')
 
-Examples:
-  $0
+Example:
+  $0 -B # for 1st build
+  $0 -r "readelf -h $TESTFILE" # to run readelf on testfile
 EOF
 }
 
@@ -53,7 +55,7 @@ run_image() {
 }
 
 # Parse flags
-while getopts ":hbBk" opt; do
+while getopts ":hbBkr:" opt; do
 	case $opt in
 		b)
 			build_images
@@ -69,6 +71,9 @@ while getopts ":hbBk" opt; do
 		k)
 			docker stop $CONTAINER_NAME
 			exit 0
+			;;
+		r)
+			command="$OPTARG"
 			;;
 		\?)
 			echo "$0: invalid option -- '$OPTARG'"
