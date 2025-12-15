@@ -10,6 +10,7 @@
 # include <stdbool.h>
 # include <getopt.h>
 # include <elf.h>
+# include <inttypes.h>
 # include <sys/stat.h>
 # include <sys/mman.h>
 

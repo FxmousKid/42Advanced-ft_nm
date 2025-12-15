@@ -36,7 +36,7 @@ DEP_FILES := $(OBJ_FILES:.o=.d)
 NAME 	:= ft_nm
 CC 	:= cc
 IFLAGS	:= -I $(INC_DIR) -I $(LIBFT_DIR)/includes/
-CFLAGS 	:= -gdwarf-4 -Wall -Wextra -Werror $(IFLAGS) -MMD -MP -DLOGFILE_PATH=\"$(LOGFILE)\"
+CFLAGS 	:= -gdwarf-4 -Wall -Wextra -Werror $(IFLAGS) -MMD -MP -DLOGFILE_PATH=\"$(LOGFILE)\" -g3
 LFLAGS 	:= libft/libft.a 
 MKDIR 	:= mkdir -p
 RM_RF 	:= rm -rf

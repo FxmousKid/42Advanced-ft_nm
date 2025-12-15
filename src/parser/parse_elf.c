@@ -18,7 +18,6 @@ static bool	parse_elf64(struct s_map *map)
 	const Elf64_Ehdr*	hdr;
 	const Elf64_Shdr*	shdr;
 
-
 	if (!m_inbounds(map, 0, sizeof(Elf64_Ehdr))) {
 		LOG_MSG("File doesn't have a ELF header");
 		return false;
@@ -32,20 +31,41 @@ static bool	parse_elf64(struct s_map *map)
 		shdr = NULL;
 
 	const Elf64_Shdr *tmp;
-	const Elf64_Shdr *tmpdyn;
+	const Elf64_Shdr *symtab_shdr = NULL;
+	const Elf64_Shdr *dyn_shdr = NULL;
 	int idx = -1;
 	while (shdr && ++idx < hdr->e_shnum) {
 		tmp = shdr + idx;
-		if (tmp->sh_type == SHT_SYMTAB)
+		switch(tmp->sh_type) {
+		case (SHT_DYNSYM):
+			dyn_shdr = tmp;
 			break;
-		if (tmp->sh_type == SHT_DYNSYM)
-			tmpdyn = tmp;
+		case (SHT_SYMTAB):
+			symtab_shdr = tmp;
+			(void)dyn_shdr; // to shut up -Wall
+			break;
+		}
 	}
-	if (!tmp && tmpdyn)
-		tmp = tmpdyn;
 
-	if (tmp->sh_type == SHT_SYMTAB)
-		printf("Found SYMTAB section at offset 0x%llu\n", tmp->sh_offset);
+	size_t symcount = symtab_shdr->sh_size / symtab_shdr->sh_entsize;
+	const Elf64_Shdr *strtbl_shdr = shdr + symtab_shdr->sh_link;
+	const char *strtab = (const char *)(map->base + strtbl_shdr->sh_offset);
+	const Elf64_Sym *sym = (const Elf64_Sym *)(map->base + symtab_shdr->sh_offset);
+	const char *name = NULL;
+	idx = -1;
+	while (++idx < (int)symcount) {
+		if (sym->st_name == 0) {
+			sym++;
+			continue;
+		}
+		name = (char *)strtab + sym->st_name;
+		if (sym->st_value)
+			printf("%016" PRIx64 " ? %s\n", (uint64_t)sym->st_value, name);
+		else
+			printf("%.*s ? %s\n", 16, "                ", name);
+		sym++;
+	}
+
 
 
 
