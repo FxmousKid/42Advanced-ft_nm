@@ -16,12 +16,12 @@
 
 # include "libft.h" // IWYU pragma: keep
 
-
+# define PROG_NAME "ft_nm"
 # define STRINGIFY(x) #x
 # define TOSTRING(x) STRINGIFY(x)
 # define DBG __FILE__ " @ " TOSTRING(__LINE__)
-# define LOG_SYS(...) do {write(1, "ft_nm: ", 7); dprintf(get_logfd(), __VA_ARGS__); _write_perr(DBG); } while (0);
-# define LOG_MSG(...) do {write(1, "ft_nm: ", 7); dprintf(get_logfd(), __VA_ARGS__); _write_err(DBG);  } while (0);
+# define LOG_SYS(...) do {write(get_logfd(), "ft_nm: ", 7); dprintf(get_logfd(), __VA_ARGS__); _write_perr(DBG); } while (0);
+# define LOG_MSG(...) do {write(get_logfd(), "ft_nm: ", 7); dprintf(get_logfd(), __VA_ARGS__); _write_err(DBG);  } while (0);
 
 # ifndef DEFAULT_TARGET_FILE
 #  define DEFAULT_TARGET_FILE "a.out"

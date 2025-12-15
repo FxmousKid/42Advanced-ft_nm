@@ -5,7 +5,7 @@ bool	ft_nm(struct s_data *ctx)
 	int fd = open(ctx->target_file, O_RDONLY);
 	if (fd < 0) {
 		LOG_SYS("open(%s, O_RDONLY)", ctx->target_file);
-		ft_printf("ft_nm: %s: %s\n", ctx->target_file, strerror(errno));
+		ft_printf("%s: error: %s: %s\n", realpath(PROG_NAME, NULL), ctx->target_file, strerror(errno));
 		write(1, "\n", 1);
 		return false;
 	}
