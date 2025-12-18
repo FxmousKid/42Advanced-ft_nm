@@ -34,7 +34,14 @@ struct s_map {
 
 struct s_symbol {
 	const char	*name;
+	/** @brief Storing both 32 and 64-bit addresses since
+	*          they both fit in Elf64_Addr */
 	Elf64_Addr	value;
+	/** @brief stores both 32 and 64_bit st_info field
+	*          needs a flag variable to know which macro to call. */
+	unsigned char	info;
+	/** @brief true if we're on 64-bit, false if not (then 32-bit) */
+	bool		is_64_bit;
 };
 
 struct s_data {
