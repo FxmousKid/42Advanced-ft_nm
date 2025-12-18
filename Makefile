@@ -19,6 +19,8 @@ SRC_FILES_NAMES += parser/parse_cli.c
 SRC_FILES_NAMES += parser/parse_elf.c
 SRC_FILES_NAMES += parser/parse_elf_symbols.c
 
+SRC_FILES_NAMES += display/display.c
+
 SRC_FILES_NAMES += utils/utils.c
 SRC_FILES_NAMES += utils/map_utils.c
 

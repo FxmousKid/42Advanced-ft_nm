@@ -13,7 +13,7 @@ static bool	parse_elf32(int fd)
 	return (true);
 }
 
-static bool	parse_elf64(struct s_map *map)
+static bool	parse_elf64(struct s_map *map, struct s_data *ctx)
 {
 	const Elf64_Ehdr*	hdr;
 	const Elf64_Shdr*	shdr;
@@ -44,56 +44,54 @@ static bool	parse_elf64(struct s_map *map)
 		return false;
 	}
 
-	const Elf64_Shdr *strtbl_shdr = shdr + symtab_shdr->sh_link;
-	const char *strtab = (const char *)(map->base + strtbl_shdr->sh_offset);
-	const Elf64_Sym *sym = (const Elf64_Sym *)(map->base + symtab_shdr->sh_offset);
-	const char *name = NULL;
-	idx = -1;
 	size_t symcount = symtab_shdr->sh_size / symtab_shdr->sh_entsize;
-	while (++idx < (int)symcount) {
-		if (sym->st_name == 0) {
-			sym++;
-			continue;
-		}
-		name = (char *)strtab + sym->st_name;
-		if (sym->st_value)
-			printf("%016" PRIx64 " ? %s\n", (uint64_t)sym->st_value, name);
-		else
-			printf("%.*s ? %s\n", 16, "                ", name);
-		sym++;
+	ctx->symbols = ft_calloc(symcount + 1, sizeof(*ctx->symbols));
+	if (!ctx->symbols) {
+		LOG_SYS("ft_calloc(%zu, %zu)", symcount + 1, sizeof(*ctx->symbols));
+		return false;
 	}
 
-
-
+	const Elf64_Shdr *strtbl_shdr = shdr + symtab_shdr->sh_link;
+	const Elf64_Sym *sym_cur = (const Elf64_Sym *)(map->base + symtab_shdr->sh_offset);
+	const Elf64_Sym *sym_end = sym_cur + symcount;
+	const char *strtab = (const char *)(map->base + strtbl_shdr->sh_offset);
+	idx = 0;
+	while (sym_cur < sym_end) {
+		if (sym_cur->st_name != 0)
+			parse_elf_symbols64(strtab, sym_cur, ctx->symbols + idx++);
+		sym_cur++;
+	}
+	ctx->sym_count = idx;
 
 	return (true);
 }
 
-bool	parse_elf(int fd)
+bool	parse_elf(int fd, struct s_data *ctx)
 {
-	struct s_map		map = {0};
+	struct s_map		*map;
 	const unsigned char	*elf_ident;
 	bool			ret = true;
 
-	if (!map_elf(&map, fd))
+	if (!map_elf(&ctx->map, fd))
 		return false;
+	map = &ctx->map;
 
-	if (!m_inbounds(&map, 0, EI_NIDENT)) {
-		LOG_MSG("File too small : %zu", map.size);
-		unmap_elf(&map);
+	if (!m_inbounds(map, 0, EI_NIDENT)) {
+		LOG_MSG("File too small : %zu", map->size);
+		unmap_elf(map);
 		return false;
 	}
 
-	elf_ident = (const unsigned char *)map.base;
+	elf_ident = (const unsigned char *)map->base;
 	if (memcmp(elf_ident, ELFMAG, SELFMAG)) {
 		LOG_MSG("Not a ELF file")
-		unmap_elf(&map);
+		unmap_elf(map);
 		return false;
 	}
 
 	switch(elf_ident[EI_CLASS]) {
 	case (ELFCLASS64):
-		ret = parse_elf64(&map);
+		ret = parse_elf64(map, ctx);
 		break;
 	case (ELFCLASS32):
 		ret = parse_elf32(fd);
@@ -102,6 +100,5 @@ bool	parse_elf(int fd)
 		ret = false;
 		LOG_MSG("Unknown Architecture : %x", elf_ident[EI_CLASS])
 	}
-	unmap_elf(&map);
 	return ret;
 }

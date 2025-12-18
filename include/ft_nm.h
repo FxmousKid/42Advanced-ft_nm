@@ -32,10 +32,19 @@ struct s_map {
 	unsigned char	*base;
 };
 
+struct s_symbol {
+	const char	*name;
+	Elf64_Addr	value;
+};
+
 struct s_data {
-	char	**target_files;
-	char	target_file[PATH_MAX + 1];
-	bool	exit_code;
+	struct s_map	map;
+	size_t		sym_count;
+	/** @brief terminated by a 0-initialized s_symbol. */
+	struct s_symbol	*symbols;
+	char		**target_files;
+	char		target_file[PATH_MAX + 1];
+	bool		exit_code;
 };
 
 // Utils
@@ -51,9 +60,13 @@ bool		map_elf(struct s_map *map, int fd);
 
 // Parsing
 bool		parse_cli(struct s_data *ctx, int *argc, char *argv[]);
+void		parse_elf_symbols64(const char *strtab,
+				    const Elf64_Sym *sym_elf,
+				    struct s_symbol *sym);
 
 // ft_nm
-bool		parse_elf(int fd);
+void		display_symbols(struct s_symbol *sym, size_t symcount);
+bool		parse_elf(int fd, struct s_data *ctx);
 bool		ft_nm(struct s_data *ctx);
 
 #endif

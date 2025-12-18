@@ -10,13 +10,16 @@ bool	ft_nm(struct s_data *ctx)
 		return false;
 	}
 	ft_printf("ft_nm: %s\n", ctx->target_file);
-	if (!parse_elf(fd)) {
+	if (!parse_elf(fd, ctx)) {
 		write(1, "\n", 1);
 		close(fd);
 		return false;
 	}
+	display_symbols(ctx->symbols, ctx->sym_count);
+	unmap_elf(&ctx->map);
 	write(1, "\n", 1);
 	close(fd);
+	// clean_data(...) // if (ctx->symbols) free(ctx->symbols)
 	return true;
 }
 

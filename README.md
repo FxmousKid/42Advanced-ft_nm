@@ -8,6 +8,8 @@ recreating a simplified cersion of the nm UNIX util
 [Mach-O file anatomy](https://oliviagallucci.com/the-anatomy-of-a-mach-o-structure-code-signing-and-pac/)
 [Symbols in binaries](https://can-ozkan.medium.com/exploring-the-nm-tool-understanding-symbols-in-binaries-1ae03193212a)
 [Disecting ELF files](https://0x434b.dev/dissecting-and-exploiting-elf-files/)
+[man 5 elf](https://man7.org/linux/man-pages/man5/elf.5.html)
+[man 1 nm](https://man7.org/linux/man-pages/man1/nm.1.html)
 
 ### Tools
 
