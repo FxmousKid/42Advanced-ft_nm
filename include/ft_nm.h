@@ -55,7 +55,7 @@ void		print_help(void);
 
 // Map utils
 bool		m_inbounds(struct s_map *map, size_t offset, size_t size);
-void		unmap_elf(struct s_map *map);
+bool		unmap_elf(struct s_map *map);
 bool		map_elf(struct s_map *map, int fd);
 
 // Parsing
@@ -67,6 +67,5 @@ void		parse_elf_symbols64(const char *strtab,
 // ft_nm
 void		display_symbols(struct s_symbol *sym, size_t symcount);
 bool		parse_elf(int fd, struct s_data *ctx);
-bool		ft_nm(struct s_data *ctx);
 
 #endif

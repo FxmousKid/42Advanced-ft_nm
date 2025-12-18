@@ -1,11 +1,30 @@
 #include "ft_nm.h"
 
-bool	ft_nm(struct s_data *ctx)
+/* The passed s_data is not created again everytime, it is
+ * the same object passed in main loop for all target files.
+ * So upon freeing data, we also have to clear it
+ * e.g. ctx->alloc_ptr = NULL;
+ * However we still need the target_files pointer (which is just argv)
+ * to continue processing the next file.
+ * */
+static bool	free_and_clear_data(struct s_data *ctx)
+{
+	char	**target_files = ctx->target_files;
+	if (ctx->symbols)
+		free(ctx->symbols);
+	if (ctx->map.base && !unmap_elf(&ctx->map))
+		return false;
+	bzero(ctx, sizeof(*ctx));
+	ctx->target_files = target_files;
+	return true;
+}
+
+static bool	ft_nm(struct s_data *ctx)
 {
 	int fd = open(ctx->target_file, O_RDONLY);
 	if (fd < 0) {
 		LOG_SYS("open(%s, O_RDONLY)", ctx->target_file);
-		ft_printf("%s: error: %s: %s\n", realpath(PROG_NAME, NULL), ctx->target_file, strerror(errno));
+		ft_printf("%s: error: %s: %s\n", PROG_NAME, ctx->target_file, strerror(errno));
 		write(1, "\n", 1);
 		return false;
 	}
@@ -16,11 +35,9 @@ bool	ft_nm(struct s_data *ctx)
 		return false;
 	}
 	display_symbols(ctx->symbols, ctx->sym_count);
-	unmap_elf(&ctx->map);
 	write(1, "\n", 1);
 	close(fd);
-	// clean_data(...) // if (ctx->symbols) free(ctx->symbols)
-	return true;
+	return free_and_clear_data(ctx);;
 }
 
 int	main(int argc, char *argv[])
@@ -35,7 +52,6 @@ int	main(int argc, char *argv[])
 	* ctx.exit_code = 0 // else we would exit earlier 
 	* */
 	
-
 	// if no files specified, use default
 	if (!*ctx.target_files)
 		*ctx.target_files = default_target_file;
@@ -48,6 +64,5 @@ int	main(int argc, char *argv[])
 		ctx.target_files++;
 	}
 
-	// free_data(&ctx);
 	return (EXIT_SUCCESS);
 }

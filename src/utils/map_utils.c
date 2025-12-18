@@ -7,13 +7,14 @@ bool	m_inbounds(struct s_map *map, size_t offset, size_t size)
 	return (offset + size <= map->size);
 }
 
-void	unmap_elf(struct s_map *map)
+bool	unmap_elf(struct s_map *map)
 {
-	if (map->base && map->base != MAP_FAILED) {
-		munmap(map->base, map->size);
-	}
+	if (map->base && map->base != MAP_FAILED)
+		if (munmap(map->base, map->size) < 0)
+			LOG_SYS("munmap")
 	map->size = 0;
 	map->base = NULL;
+	return true;
 }
 
 bool	map_elf(struct s_map *map, int fd)
