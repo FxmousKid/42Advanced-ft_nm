@@ -89,6 +89,7 @@ clean :
 	@$(ECHO) "$(GREEN)[CLN] Clean complete.$(NC)"
 
 fclean : 
+	@$(MAKE) --no-print-directory -s -C $(LIBFT_DIR) fclean
 	@$(ECHO) "$(BROWN)[CLN] Cleaning object, dependency files, and library...$(NC)"
 	@$(RM_RF) $(BUILD_DIR) $(NAME)
 	@$(ECHO) "$(GREEN)[CLN] Clean complete.$(NC)"
