@@ -2,8 +2,22 @@
 
 char	get_symbol_type(struct s_symbol *sym)
 {
-	(void)sym;
-	return '?';
+	if (sym->is_64_bit == false)
+		goto sym32bit_switch;
+	switch (ELF64_ST_TYPE(sym->info)) {
+	case (STT_NOTYPE):
+		return '0';
+	default:
+		return '?';
+	}
+
+sym32bit_switch:
+	switch (ELF32_ST_TYPE(sym->info)) {
+	case (STT_NOTYPE):
+		return '0';
+	default:
+		return '?';
+	}
 }
 
 void	display_symbols(struct s_symbol *sym, size_t symcount)
