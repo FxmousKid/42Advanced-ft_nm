@@ -27,6 +27,16 @@
 #  define DEFAULT_TARGET_FILE "a.out"
 # endif
 
+# define FT_NM_OPT_a 1 << 0
+# define FT_NM_OPT_g 1 << 1
+# define FT_NM_OPT_u 1 << 2
+# define FT_NM_OPT_r 1 << 3
+# define FT_NM_OPT_p 1 << 4
+
+# define FT_NM_EXTRACT_OPT(var, opt) (var & opt)
+
+typedef uint8_t t_ft_nm_option;
+
 struct s_map {
 	size_t		size;
 	unsigned char	*base;
@@ -45,6 +55,7 @@ struct s_symbol {
 };
 
 struct s_data {
+	uint8_t		options;
 	struct s_map	map;
 	size_t		sym_count;
 	/** @brief terminated by a 0-initialized s_symbol. */
@@ -72,7 +83,9 @@ void		parse_elf_symbols64(const char *strtab,
 				    struct s_symbol *sym);
 
 // ft_nm
-void		display_symbols(struct s_symbol *sym, size_t symcount);
+void		display_symbols(struct s_symbol *sym, 
+				size_t symcount, 
+				t_ft_nm_option options);
 bool		parse_elf(int fd, struct s_data *ctx);
 
 #endif

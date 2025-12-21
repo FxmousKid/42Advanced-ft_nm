@@ -1,6 +1,7 @@
 #include "ft_nm.h"
 
-char	get_symbol_type(struct s_symbol *sym)
+
+static char	get_symbol_type(struct s_symbol *sym)
 {
 	if (sym->is_64_bit == false)
 		goto sym32bit_switch;
@@ -20,9 +21,12 @@ sym32bit_switch:
 	}
 }
 
-void	display_symbols(struct s_symbol *sym, size_t symcount)
+void	display_symbols(struct s_symbol *sym, 
+		        size_t symcount, 
+			t_ft_nm_option options)
 {
 	uint64_t	symval;
+	(void)options;
 
 	if (!sym || symcount == 0)
 		return;

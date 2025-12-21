@@ -34,7 +34,7 @@ static bool	ft_nm(struct s_data *ctx)
 		close(fd);
 		return false;
 	}
-	display_symbols(ctx->symbols, ctx->sym_count);
+	display_symbols(ctx->symbols, ctx->sym_count, ctx->options);
 	write(1, "\n", 1);
 	close(fd);
 	return free_and_clear_data(ctx);;
