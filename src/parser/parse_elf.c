@@ -56,11 +56,8 @@ static bool	parse_elf64(struct s_map *map, struct s_data *ctx)
 	const Elf64_Sym *sym_end = sym_cur + symcount;
 	const char *strtab = (const char *)(map->base + strtbl_shdr->sh_offset);
 	idx = 0;
-	while (sym_cur < sym_end) {
-		if (sym_cur->st_name != 0)
-			parse_elf_symbols64(strtab, sym_cur, ctx->symbols + idx++);
-		sym_cur++;
-	}
+	while (sym_cur < sym_end)
+		parse_elf_symbols64(strtab, sym_cur++, ctx->symbols + idx++);
 	ctx->sym_count = idx;
 
 	return (true);

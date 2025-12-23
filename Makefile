@@ -23,6 +23,7 @@ SRC_FILES_NAMES += display/display.c
 
 SRC_FILES_NAMES += utils/utils.c
 SRC_FILES_NAMES += utils/map_utils.c
+SRC_FILES_NAMES += utils/elf_utils.c
 
 # Full path to .c files
 SRC_FILES = $(addprefix $(SRC_DIR), $(SRC_FILES_NAMES))

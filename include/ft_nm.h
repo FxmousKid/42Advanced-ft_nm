@@ -35,6 +35,21 @@
 
 # define FT_NM_EXTRACT_OPT(var, opt) (var & opt)
 
+# define FT_NM_STT_NO_TYPE '0'
+# define FT_NM_SYM_UNDEF 'U'
+# define FT_NM_STT_FILE 'a' 
+# define FT_NM_TEXT_SECTION_LOCAL 't'
+# define FT_NM_TEXT_SECTION_GLOBAL 'T'
+# define FT_NM_SYM_BSS_LOCAL 'b'
+# define FT_NM_SYM_BSS_GLOBAL 'B'
+# define FT_NM_SYM_WEAK_LOCAL 'w'
+# define FT_NM_SYM_WEAK_GLOBAL 'W'
+# define FT_NM_SYM_READ_ONLY_LOCAL 'r'
+# define FT_NM_SYM_READ_ONLY_GLOBAL 'R'
+# define FT_NM_SYM_DATA_LOCAL 'd'
+# define FT_NM_SYM_DATA_GLOBAL 'D'
+
+
 typedef uint8_t t_ft_nm_option;
 
 struct s_map {
@@ -43,6 +58,7 @@ struct s_map {
 };
 
 struct s_symbol {
+	uint16_t	shndx;
 	const char	*name;
 	/** @brief Storing both 32 and 64-bit addresses since
 	*          they both fit in Elf64_Addr */
@@ -62,6 +78,7 @@ struct s_data {
 	struct s_symbol	*symbols;
 	char		**target_files;
 	char		target_file[PATH_MAX + 1];
+	short		total_files;
 	bool		exit_code;
 };
 
@@ -70,6 +87,28 @@ int		get_logfd(void);
 void		_write_perr(const char *location);
 void		_write_err(const char *location);
 void		print_help(void);
+
+// elf utils
+const Elf32_Shdr	*get_elf32_shdr(struct s_map *map);
+const Elf32_Shdr	*get_elf32_strtbl_shdr(struct s_map *map);
+Elf32_Word		get_elf32_sym_parent_sh_type(struct s_map *map,
+						     struct s_symbol *sym);
+Elf32_Word		get_elf32_sym_parent_sh_flag(struct s_map *map, 
+						     struct s_symbol *sym);
+bool			is_sym32_local(unsigned char info);
+bool			is_sym32_global(unsigned char info);
+bool			is_sym32_weak(unsigned char info);
+
+
+const Elf64_Shdr	*get_elf64_shdr(struct s_map *map);
+const Elf64_Shdr	*get_elf64_strtbl_shdr(struct s_map *map);
+Elf64_Word		get_elf64_sym_parent_sh_type(struct s_map *map,
+						     struct s_symbol *sym);
+Elf64_Word		get_elf64_sym_parent_sh_flag(struct s_map *map, 
+						     struct s_symbol *sym);
+bool			is_sym64_local(unsigned char info);
+bool			is_sym64_global(unsigned char info);
+bool			is_sym64_weak(unsigned char info);
 
 // Map utils
 bool		m_inbounds(struct s_map *map, size_t offset, size_t size);
@@ -83,9 +122,7 @@ void		parse_elf_symbols64(const char *strtab,
 				    struct s_symbol *sym);
 
 // ft_nm
-void		display_symbols(struct s_symbol *sym, 
-				size_t symcount, 
-				t_ft_nm_option options);
+void		display_symbols(struct s_data *ctx);
 bool		parse_elf(int fd, struct s_data *ctx);
 
 #endif
